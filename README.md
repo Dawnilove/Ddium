@@ -6,7 +6,7 @@
 
 <p align="center">
   래더 편집기 · 가상 실린더 설비 · 학습 미션 · 실제 PLC 연결을 한국어 화면 하나에 모았어요.<br>
-  미쓰비시 <b>MELSEC-Q</b> 래더·IL 을 연습하는 <b>오픈소스</b> Windows 앱이에요.
+  미쓰비시 <b>MELSEC-Q</b> 래더·IL 을 연습하는 Windows 앱이에요.
 </p>
 
 <p align="center">
