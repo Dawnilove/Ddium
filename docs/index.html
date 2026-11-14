@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>띄움 — PLC 래더를 배우고, 가상 설비로 시험하고, 실제 PLC 로 띄워 보세요</title>
+<meta name="description" content="래더 편집기·가상 실린더 설비·학습 미션·실제 PLC 연결을 한국어 화면 하나에 모은 오픈소스 Windows 앱. 미쓰비시 MELSEC-Q 래더·IL 연습용.">
+<meta property="og:title" content="띄움 — PLC 래더 학습 프로그램">
+<meta property="og:description" content="래더를 그리고, 가상 설비로 시험하고, 실제 PLC 로 띄워 보세요.">
+<meta property="og:image" content="banner.png">
+<link rel="icon" href="icon.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{--bg:#f4f1e8;--bg2:#ebe7da;--panel:#fbf9f3;--line:#d6d0c0;--text:#161616;--sub:#5d584d;--accent:#c84400;--accent-fill:#ee5500;--accent-ink:#fff;--green:#3b7339;--soft:color-mix(in srgb,var(--accent-fill) 12%,transparent);--shadow:3px 3px 0 rgba(22,22,22,.22)}
+@media (prefers-color-scheme:dark){:root{--bg:#1c1b18;--bg2:#22211d;--panel:#272521;--line:#3d3a33;--text:#f3efe4;--sub:#b3ab9c;--accent:#ff8a4a;--accent-fill:#ee5500;--accent-ink:#161616;--green:#8fcb8b;--shadow:3px 3px 0 rgba(0,0,0,.45)}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:68px}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.7 "Pretendard Variable","Pretendard","Segoe UI","Malgun Gothic",system-ui,sans-serif;word-break:keep-all}
+a{color:var(--accent)}
+img{max-width:100%}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+
+/* 상단 메뉴 */
+nav{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:20px;height:56px}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;color:var(--text);text-decoration:none;flex:none}
+.brand img{width:28px;height:28px;border-radius:7px}
+.links{display:flex;gap:18px;overflow-x:auto;white-space:nowrap;font-size:14px;flex:1;scrollbar-width:none}
+.links a{color:var(--sub);text-decoration:none}
+.links a:hover{color:var(--accent)}
+nav .btn{padding:7px 14px;font-size:14px;flex:none}
+
+/* 버튼 */
+.btn{display:inline-block;padding:12px 22px;border-radius:10px;font-weight:700;text-decoration:none;border:2px solid var(--text);color:var(--text);background:var(--panel);box-shadow:var(--shadow);transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 rgba(22,22,22,.3)}
+.btn.main{background:var(--accent-fill);color:var(--accent-ink);border-color:var(--text)}
+.btn:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* 히어로 */
+.hero{text-align:center;padding:56px 0 8px;background:radial-gradient(ellipse 50% 40% at 50% 0,var(--soft),transparent 70%)}
+.ver{display:inline-block;color:var(--accent);font-size:13px;font-weight:700;padding:3px 12px;border:1.5px solid var(--accent);border-radius:999px}
+h1{font-size:clamp(32px,6.2vw,58px);margin:18px 0 14px;line-height:1.2;letter-spacing:-.02em}
+h1 em{font-style:normal;color:var(--accent)}
+.lead{color:var(--sub);font-size:clamp(16px,2.2vw,19px);max-width:640px;margin:0 auto 28px}
+.lead b{color:var(--text)}
+.cta{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
+.cta .btn.main{font-size:18px;padding:15px 32px}
+.cta .btn{font-size:17px;padding:15px 24px}
+.others{margin:16px 0 0;font-size:14px;color:var(--sub)}
+.facts{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:10px 32px;padding:0;margin:30px 0 0;color:var(--sub);font-size:14px}
+.facts li{margin:0}
+.facts b{display:block;color:var(--text);font-size:20px;line-height:1.3}
+img.shot{display:block;width:100%;height:auto;border-radius:10px;border:2px solid var(--text);box-shadow:var(--shadow)}
+.hero .shot{margin-top:40px}
+
+/* 공통 섹션 */
+section{padding:64px 0 0}
+.band{background:var(--bg2);padding:56px 0;margin-top:64px}
+.eyebrow{display:block;color:var(--accent);font-size:13px;font-weight:700;letter-spacing:.06em;margin-bottom:6px}
+h2{font-size:clamp(24px,4vw,34px);margin:0 0 10px;line-height:1.3}
+.sec-lead{color:var(--sub);margin:0 0 26px;max-width:660px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.card{background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:20px}
+.card h3{margin:0 0 6px;font-size:18px}
+.card p{margin:0;color:var(--sub);font-size:15px}
+.card .ic{font-size:26px;display:block;margin-bottom:8px}
+
+/* 화면 */
+.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
+figure{margin:0}
+figcaption{color:var(--sub);font-size:14px;margin-top:8px}
+figcaption b{color:var(--text)}
+
+/* 설치 단계 */
+.steps{list-style:none;counter-reset:s;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;padding:0;margin:0}
+.steps > li{counter-increment:s;background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:20px;margin:0;color:var(--sub);font-size:15px}
+.steps > li::before{content:counter(s);display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--accent-fill);color:var(--accent-ink);font-weight:800;margin-bottom:10px;border:2px solid var(--text)}
+.steps b{color:var(--text)}
+.note{margin-top:22px;background:var(--panel);border:1.5px solid var(--line);border-left:5px solid var(--accent-fill);border-radius:10px;padding:14px 18px;color:var(--sub);font-size:15px}
+.note li{margin:2px 0}
+.note ul{margin:0;padding-left:18px}
+.check li{list-style:none;position:relative;padding-left:22px}
+.check li::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:700}
+.warn{border-left-color:#c0392b}
+.warn li::before{content:"!";color:#c0392b}
+
+/* 변경점·이전 버전 */
+.cl,#vlist{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.cl>li{background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:16px 20px}
+.cl h3{margin:0 0 6px;font-size:17px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
+.cl h3 small{color:var(--sub);font-weight:400;font-size:14px}
+.cl p,.cl ul{margin:0;color:var(--sub)}
+.cl ul{padding-left:18px}
+#vlist li{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:12px 16px}
+#vlist b{font-size:16px}
+#vlist .vmeta{color:var(--sub);font-size:14px}
+#vlist .grow{flex:1}
+#vlist a{font-weight:700;text-decoration:none;margin-right:10px}
+#vlist a:hover{text-decoration:underline}
+.pre{font-size:12px;font-weight:700;color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:0 9px}
+code{background:var(--bg2);border-radius:5px;padding:1px 6px;font-size:.92em}
+footer{margin-top:72px;border-top:1px solid var(--line);padding:28px 0 44px;color:var(--sub);font-size:14px}
+footer a{color:var(--sub)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="icon.png" alt="">띄움</a>
+    <div class="links">
+      <a href="#features">기능</a>
+      <a href="#screens">화면</a>
+      <a href="#install">설치</a>
+      <a href="#caution">실제 장비</a>
+      <a href="#changelog">변경점</a>
+      <a href="#versions">이전 버전</a>
+      <a href="#license">라이선스</a>
+    </div>
+    <a class="btn main" data-dl href="https://github.com/Dawnilove/Ddium/releases/latest/download/Ddium-Setup.exe">받기</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <span class="ver" data-ver>1.3.0</span>
+    <h1>PLC 를 <em>띄워</em> 보세요</h1>
+    <p class="lead">래더를 그리고, <b>가상 실린더 설비</b>로 시험하고, 미션으로 채점받고, 준비가 되면 <b>실제 PLC</b> 로 보내 보세요. 미쓰비시 MELSEC-Q 래더·IL 을 연습하는 <b>오픈소스</b> Windows 앱이에요.</p>
+    <div class="cta">
+      <a class="btn main" data-dl href="https://github.com/Dawnilove/Ddium/releases/latest/download/Ddium-Setup.exe">Windows용 받기</a>
+      <a class="btn" href="https://github.com/Dawnilove/Ddium">GitHub</a>
+      <a class="btn" href="#features">기능 보기</a>
+    </div>
+    <p class="others">Windows 10 · 11 &nbsp;·&nbsp; 코드 서명이 없어요 (설치 안내는 <a href="#install">아래</a>) &nbsp;·&nbsp; <a href="#versions">이전 버전</a></p>
+    <ul class="facts">
+      <li><b>미션 39개</b>자동 채점·힌트</li>
+      <li><b>가상 설비</b>실린더 A·B·C</li>
+      <li><b>PLC 직접 쓰기</b>Q03UDV 확인</li>
+      <li><b>Apache-2.0</b>누구나 고쳐 쓸 수 있어요</li>
+    </ul>
+    <img class="shot" src="images/hero.png" alt="띄움 시뮬레이션 화면: 왼쪽 래더(신호가 흐르는 모니터), 오른쪽 가상 실린더 설비">
+  </div>
+</header>
+
+<section id="features">
+  <div class="wrap">
+    <span class="eyebrow">주요 기능</span>
+    <h2>배우고, 시험하고, 보내 보기까지</h2>
+    <p class="sec-lead">PLC 학습에 필요한 것을 한 창에 모았어요. 장비가 없어도 처음부터 끝까지 연습할 수 있어요.</p>
+    <div class="cards">
+      <div class="card"><span class="ic">🪜</span><h3>래더 편집기</h3><p>접점·코일·타이머·카운터·비교·산술·32비트 명령을 그리고 IL 과 오가요. 가로선·세로선, 끌어 놓기, 미니맵, 되돌리기, 코멘트, 찾기·교차 참조.</p></div>
+      <div class="card"><span class="ic">🏭</span><h3>가상 설비</h3><p>실린더 A·B·C 등각 도면. 래더와 그림이 서로 강조되고, 변위–단계 선도·압력 그래프·"왜 안 움직이나?" 진단이 있어요.</p></div>
+      <div class="card"><span class="ic">🎯</span><h3>학습 미션 39개</h3><p>자동 채점, 힌트 3단계, 채점 결과를 그림 위에 보여 주는 덮개로 틀린 곳을 바로 찾아요. 일부러 틀린 프로그램을 고치는 오류 찾기도 있어요.</p></div>
+      <div class="card"><span class="ic">🧑‍🏫</span><h3>학습 모드 (플러그인)</h3><p>내 래더를 렁 단위로 나눠 한 단계씩 설명하고, [해 보기]로 센서 신호를 자동으로 넣어 켜지고 꺼지는 것을 확인해요. 모르는 것은 질문칸에 물어보면 돼요(AI 를 연결하면 더 자세히).</p></div>
+      <div class="card"><span class="ic">🧩</span><h3>플러그인</h3><p>필요한 기능을 골라 받아요: PLC 점검 도구·사진 장면 초안·순서 생성기·학습 모드. 플러그인은 격리돼 실행되고 허용한 권한만 써요.</p></div>
+      <div class="card"><span class="ic">📜</span><h3>ST · SFC</h3><p>래더·IL 과 함께 ST(구조적 텍스트)와 SFC(순차 기능 차트) 화면을 지원해요. 영문 화면도 있어요.</p></div>
+      <div class="card"><span class="ic">📈</span><h3>타이밍 차트</h3><p>신호의 ON/OFF 변화를 시간순으로 보고 CSV·PNG 로 내보내요. 입력 기록·재생도 돼요.</p></div>
+      <div class="card"><span class="ic">🤖</span><h3>AI 도우미</h3><p>설치된 Claude Code 같은 CLI 에 말로 프로그램을 부탁하면 제안해 줘요. [적용]·[되돌리기]는 직접 눌러요.</p></div>
+      <div class="card"><span class="ic">🔁</span><h3>GX Works2 호환</h3><p>목록 형식 CSV 가져오기·내보내기, <code>.gxw</code> 열기. 스텝 번호 규칙도 맞췄어요.</p></div>
+      <div class="card"><span class="ic">🔌</span><h3>실제 PLC 연결</h3><p>SLMP 로 읽기(기본 읽기 전용), 실제 구동 모드, FTP 로 프로그램을 PLC 에 직접 쓰기. 승인 창·자동 백업·되읽기 비교·백업 복구까지 갖췄어요.</p></div>
+      <div class="card"><span class="ic">🆕</span><h3>앱 안 업데이트</h3><p>새 버전이 나오면 알려 주고, [업데이트] 한 번으로 받아 SHA-256 을 확인한 뒤 설치해요.</p></div>
+      <div class="card"><span class="ic">🌐</span><h3>웹 방식 (실험)</h3><p>서명 없는 exe 가 막히는 PC 용. 공식 Node.js 와 Edge 앱 창으로 같은 화면을 열어요.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="band" id="screens">
+  <div class="wrap">
+    <span class="eyebrow">화면</span>
+    <h2>이렇게 생겼어요</h2>
+    <p class="sec-lead">실제 띄움 화면이에요.</p>
+    <div class="gallery">
+      <figure><img class="shot" src="images/missions.png" alt="학습 미션 화면" loading="lazy"><figcaption><b>학습 미션</b> · 문제를 읽고 래더를 그려 채점해요</figcaption></figure>
+      <figure><img class="shot" src="images/ladder.png" alt="래더 편집 화면" loading="lazy"><figcaption><b>래더 편집</b> · 접점·코일을 그리고 IL 과 오가요</figcaption></figure>
+      <figure><img class="shot" src="images/plc-write.png" alt="PLC 로 직접 쓰기 대화상자" loading="lazy"><figcaption><b>PLC 로 직접 쓰기</b> · 승인 창 · 자동 백업 · FTP 준비 안내</figcaption></figure>
+      <figure><img class="shot" src="images/settings.png" alt="설정 화면: 테마·업데이트·PLC 연결" loading="lazy"><figcaption><b>설정</b> · 테마 · 업데이트 · PLC 연결</figcaption></figure>
+    </div>
+  </div>
+</div>
+
+<section id="install">
+  <div class="wrap">
+    <span class="eyebrow">설치</span>
+    <h2>3단계면 끝나요</h2>
+    <p class="sec-lead">Windows 10 · 11 에서 쓸 수 있어요.</p>
+    <ol class="steps">
+      <li><b>받기</b><br><a data-dl href="https://github.com/Dawnilove/Ddium/releases/latest/download/Ddium-Setup.exe">설치 파일(Ddium-Setup.exe)</a>을 받아요. 설치 없이 쓰려면 <a href="https://github.com/Dawnilove/Ddium/releases/latest/download/Ddium-portable.exe">휴대용(portable)</a>을, 서명 없는 exe 가 막히는 PC 면 <a href="https://github.com/Dawnilove/Ddium/releases/latest/download/Ddium-Web.zip">웹 방식(zip)</a>을 받으세요. 다른 버전은 <a href="#versions">이전 버전</a>에서 받을 수 있어요.</li>
+      <li><b>실행</b><br>파일을 실행하면 설치가 끝나요. "PC 보호" 창이 뜨면 <b>추가 정보 → 실행</b>을 눌러 주세요.</li>
+      <li><b>시작</b><br>띄움을 열면 빠른 시작 안내가 떠요. [▶ RUN] 을 누르고 아래 PB1 버튼을 눌러 보세요.</li>
+    </ol>
+    <div class="note">
+      <ul class="check">
+        <li>이 프로그램은 <b>코드 서명이 없어서</b> Windows 가 경고를 보여요.</li>
+        <li><b>스마트 앱 컨트롤</b>이 켜진 PC(새로 설치한 Windows 11 등)에서는 서명 없는 exe 가 막혀요. 그럴 때는 <b>웹 방식</b>(<code>Ddium-Web-x.y.z.zip</code>)을 시험해 보세요(실험 기능).</li>
+        <li>설치한 뒤에는 앱이 <b>새 버전을 확인해 알려 줘요</b>(설정에서 끌 수 있어요). 이 기능은 1.0.1 부터 들어 있어요. 1.0.0 을 쓰고 있다면 최신 버전을 한 번 직접 설치해 주세요.</li>
+        <li>받은 파일이 맞는지는 릴리스의 <code>SHA256SUMS.txt</code> 로 확인할 수 있어요.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="caution">
+  <div class="wrap">
+    <span class="eyebrow">실제 장비</span>
+    <h2>실제 PLC 에 연결하기 전에</h2>
+    <p class="sec-lead">시뮬레이션은 안전하지만, 실제 설비는 사람이 다칠 수 있어요.</p>
+    <div class="note warn">
+      <ul class="check warn">
+        <li>이 앱은 <b>교육용</b>이에요. 실제 설비에 연결하기 전에 에어·구동부 주변을 확인하고 <b>하드웨어 비상 정지</b>를 따로 갖추세요.</li>
+        <li>실제 PLC 연결은 기본으로 <b>읽기 전용</b>이고, 쓰기는 단계별 승인이 필요해요.</li>
+        <li>"PLC 로 직접 쓰기"는 PLC 의 프로그램 파일을 바꿔요. 앱이 쓰기 전에 원본을 백업하지만, <b>실습용 PLC 에서 먼저</b> 시험하고 GX Works2 로 복구할 수 있게 원본 프로젝트를 보관하세요.</li>
+        <li>확인한 PLC 는 미쓰비시 <b>Q03UDV</b>(내장 이더넷 포트)예요. 사용 결과에 대한 책임은 사용자에게 있어요.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="changelog">
+  <div class="wrap">
+    <span class="eyebrow">변경점</span>
+    <h2>버전별로 바뀐 점</h2>
+    <p class="sec-lead">최신 버전부터 보여 줘요. 전체 내용은 <a href="https://github.com/Dawnilove/Ddium/blob/master/CHANGELOG.md">CHANGELOG.md</a> 에 있어요.</p>
+    <ul class="cl">
+      <li><h3>1.3.0 <small>2026-11-13</small></h3><ul><li><b>Jiwon Edition</b>: [도움말 → 띄움 정보]와 시작 화면(끌 수 있어요), 창 제목에 에디션 표시와 새 로고.</li><li><b>학습 모드</b> 플러그인: 래더를 한 단계씩 설명하고 센서 신호를 자동으로 넣어 확인해요.</li><li>학습 미션 12개 추가(39개), 오류 찾기·실습대.</li><li>플러그인 정리: PLC 점검 도구 하나, 사진 장면 초안 하나로 합쳤어요. 메뉴 이름과 예제 입구도 정리했어요.</li></ul></li>
+      <li><h3>1.2.0 <small>2026-11-12</small></h3><p>Z 인덱스 레지스터·인덱스 수식·BSFL 명령이 추가되고 [SFC] 화면이 열려요.</p></li>
+      <li><h3>1.1.0 ~ 1.1.3 <small>2026-11-12</small></h3><ul><li>래더 "놓고 선으로 잇기"(GX Works2 방식)와 단축키 보강, ST 입력.</li><li>특수 릴레이·명령 추가, 플러그인 확장, 영문 화면.</li><li>설치형 업데이트가 자동으로 진행돼요. 플러그인은 하나에 패널 하나로 열려요.</li></ul></li>
+      <li><h3>1.0.3 ~ 1.0.8 <small>2026-11-11 ~ 12</small></h3><p>GX Works2 단축키, CALL/FOR 같은 명령, 플러그인 탭과 사진 장면 초안, AI 도우미 모델 선택, 업데이트 버튼 등.</p></li>
+      <li><h3>1.0.2 <small>2026-11-11</small></h3><p>프로그램 이름이 <b>띄움</b>으로 통일돼요 — 데이터 폴더·설치 폴더·알림에 나오던 <code>plc-study</code> 를 모두 바꿨고, 예전 데이터는 처음 실행할 때 자동으로 옮겨요. 글자 로고는 ㅢ 의 ㅡ 와 움 의 ㅜ 가 한 줄로 이어져요.</p></li>
+      <li><h3>1.0.1 <small>2026-11-11</small></h3><ul><li><b>앱 안 업데이트</b>: 새 버전을 알려 주고 [업데이트] 한 번으로 받아 설치해요(SHA-256 확인).</li><li>PLC 직접 쓰기: 한글이 든 줄 문장·노트는 빼고 쓰고 확인 창에 알려 줘요.</li><li>웹 방식(실험) 묶음 추가.</li></ul></li>
+      <li><h3>1.0.0 <small>2026-11-11</small></h3><p>첫 정식 릴리즈. 래더 편집기, 가상 설비, 학습 미션 27개, GX Works2 CSV·<code>.gxw</code> 호환, 실제 PLC 연결(SLMP)과 FTP 직접 쓰기, 한국어 화면과 3가지 테마.</p></li>
+    </ul>
+  </div>
+</section>
+
+<section id="versions">
+  <div class="wrap">
+    <span class="eyebrow">이전 버전</span>
+    <h2>다른 버전 받기</h2>
+    <p class="sec-lead">GitHub 의 릴리스 목록이에요. 불러오지 못하면 <a href="https://github.com/Dawnilove/Ddium/releases">Releases 페이지</a>에서 받으세요.</p>
+    <ul id="vlist"><li><span class="vmeta">목록을 불러오는 중…</span></li></ul>
+  </div>
+</section>
+
+<section id="license">
+  <div class="wrap">
+    <span class="eyebrow">라이선스</span>
+    <h2>오픈소스예요</h2>
+    <p class="sec-lead">띄움은 <a href="https://github.com/Dawnilove/Ddium/blob/master/LICENSE">Apache License 2.0</a> 이에요(Copyright 2026 Dawnilove). <code>MAIN.QPG</code> 형식 조사와 쓰기 순서는 <a href="https://github.com/BlackBuddle/plc-mcp">plc-mcp</a>(Apache-2.0)의 연구를 참고해 새로 구현했어요. 글꼴은 IBM Plex Sans KR·JetBrains Mono(OFL-1.1)예요. 전체 고지는 <a href="https://github.com/Dawnilove/Ddium/blob/master/THIRD-PARTY-NOTICES.md">THIRD-PARTY-NOTICES.md</a> 에 있어요.</p>
+    <p class="sec-lead">이 프로젝트는 미쓰비시전기와 관련이 없어요. MELSEC·GX Works2·MELSOFT 는 미쓰비시전기의 상표예요.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a href="https://github.com/Dawnilove/Ddium">GitHub</a> · <a href="https://github.com/Dawnilove/Ddium/issues">문제 알리기</a> · <a href="https://github.com/Dawnilove/Ddium/releases">Releases</a> · 띄움 © 2026 Dawnilove
+  </div>
+</footer>
+
+<script>
+(function () {
+  var REPO = 'Dawnilove/Ddium';
+  var fmt = function (iso) { try { return new Date(iso).toISOString().slice(0, 10); } catch (e) { return ''; } };
+  var pick = function (r, re) { return (r.assets || []).filter(function (a) { return re.test(a.name); })[0]; };
+  fetch('https://api.github.com/repos/' + REPO + '/releases', { headers: { Accept: 'application/vnd.github+json' } })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (list) {
+      list = list.filter(function (r) { return !r.draft; });
+      var latest = list.filter(function (r) { return !r.prerelease; })[0];
+      if (latest) {
+        document.querySelectorAll('[data-ver]').forEach(function (e) { e.textContent = latest.tag_name.replace(/^v/, ''); });
+      }
+      var ul = document.getElementById('vlist');
+      ul.textContent = '';
+      list.forEach(function (r) {
+        var li = document.createElement('li');
+        var b = document.createElement('b'); b.textContent = r.tag_name.replace(/^v/, ''); li.appendChild(b);
+        if (r.prerelease) { var p = document.createElement('span'); p.className = 'pre'; p.textContent = '베타'; li.appendChild(p); }
+        var d = document.createElement('span'); d.className = 'vmeta'; d.textContent = fmt(r.published_at); li.appendChild(d);
+        var g = document.createElement('span'); g.className = 'grow'; li.appendChild(g);
+        [[/^Ddium-Setup-.*\.exe$/, '설치 파일'], [/portable\.exe$/, '휴대용'], [/^Ddium-Web-.*\.zip$/, '웹 방식']].forEach(function (k) {
+          var a = pick(r, k[0]);
+          if (a) { var l = document.createElement('a'); l.href = a.browser_download_url; l.textContent = k[1]; li.appendChild(l); }
+        });
+        var n = document.createElement('a'); n.href = r.html_url; n.textContent = '릴리스 노트'; li.appendChild(n);
+        ul.appendChild(li);
+      });
+    })
+    .catch(function () {
+      var ul = document.getElementById('vlist');
+      ul.textContent = '';
+      var li = document.createElement('li');
+      var a = document.createElement('a'); a.href = 'https://github.com/' + REPO + '/releases'; a.textContent = 'GitHub Releases 에서 보기';
+      li.appendChild(a); ul.appendChild(li);
+    });
+})();
+</script>
+</body>
+</html>

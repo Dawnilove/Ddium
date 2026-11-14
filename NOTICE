@@ -1,0 +1,8 @@
+띄움 (Ddium)
+Copyright 2026 Dawnilove
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This product includes software derived from plc-mcp (https://github.com/BlackBuddle/plc-mcp),
+Apache License 2.0: the MAIN.QPG file format rules and the FTP write sequence for the
+Mitsubishi Q03UDV were ported to TypeScript. See THIRD-PARTY-NOTICES.md for details.
