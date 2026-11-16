@@ -52,6 +52,10 @@
     <td width="50%"><img src="docs/images/plc-write.png" alt="PLC 로 직접 쓰기 대화상자"><br><sub><b>PLC 로 직접 쓰기</b> · FTP 준비 방법까지 안내해요</sub></td>
     <td width="50%"><img src="docs/images/settings.png" alt="설정 화면: 테마·업데이트·PLC 연결"><br><sub><b>설정</b> · 테마 · 업데이트 · PLC 연결</sub></td>
   </tr>
+  <tr>
+    <td width="50%"><img src="docs/images/learn-mode.png" alt="학습 모드: 렁을 단계별로 설명하는 패널"><br><sub><b>학습 모드(플러그인)</b> · 래더를 렁 단위로 풀어 설명하고 신호 흐름을 확인해요</sub></td>
+    <td width="50%"><img src="docs/images/about.png" alt="띄움 정보 창: 버전과 Jiwon Edition 로고"><br><sub><b>띄움 정보</b> · 버전과 에디션 로고</sub></td>
+  </tr>
 </table>
 
 더 자세한 소개는 **[사이트](https://dawnilove.github.io/Ddium/)** 에서 볼 수 있어요.
