@@ -1,8 +1,27 @@
 <p align="center">
-  <a href="https://dawnilove.github.io/Ddium/"><img src="docs/banner.png" alt="띄움 — PLC 래더를 배우고, 가상 설비로 시험하고, 실제 PLC 로 띄워 보세요"></a>
+  <a href="https://dawnilove.github.io/Ddium/"><picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/banner-dark.svg">
+    <img src="docs/banner.svg" alt="띄움: X15 를 누르면 Y20 코일이 켜지고 가상 실린더가 전진해요" width="100%">
+  </picture></a>
 </p>
 
 <h3 align="center">PLC 래더를 배우고, 가상 설비로 시험하고, 실제 PLC 로 띄워 보세요.</h3>
+
+<p align="center">
+  <a href="https://github.com/Dawnilove/Ddium/releases/latest/download/Ddium-Setup.exe"><b>⬇ 설치 파일 바로 받기 (Ddium-Setup.exe)</b></a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/Dawnilove/Ddium/releases/latest/download/Ddium-portable.exe">설치 없이 쓰는 휴대용</a>
+  &nbsp;·&nbsp;
+  <a href="https://dawnilove.github.io/Ddium/"><b>사이트에서 래더 눌러 보기</b></a>
+</p>
+
+### 사용법 3단계
+
+1. **받기**: `Ddium-Setup.exe` 를 받아 실행해요. "PC 보호" 창이 뜨면 **추가 정보 → 실행**을 눌러요.
+2. **RUN**: 위쪽 실행 막대의 **▶ RUN** 을 누르고, 래더 왼쪽 위의 **[모니터]** 를 켜요.
+3. **눌러 보기**: 화면 아래 **PB1** 을 누르면 램프(Y20)가 켜지고, **PB2** 로 꺼져요. 자세한 내용은 [사용 설명서](docs/USER-GUIDE.md) 에 있어요.
+
+---
 
 <p align="center">
   래더 편집기 · 가상 실린더 설비 · 학습 미션 · 실제 PLC 연결을 한국어 화면 하나에 모았어요.<br>
@@ -14,12 +33,6 @@
   <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-4C8C4A?labelColor=161616&style=for-the-badge" alt="Windows 10, 11">
   <img src="https://img.shields.io/badge/%EB%9D%BC%EC%9D%B4%EC%84%A0%EC%8A%A4-Apache--2.0-4A6FA5?labelColor=161616&style=for-the-badge" alt="Apache-2.0">
   <img src="https://img.shields.io/badge/%EC%84%9C%EB%AA%85-%EC%97%86%EC%9D%8C-C65D3B?labelColor=161616&style=for-the-badge" alt="서명 없음">
-</p>
-
-<p align="center">
-  <a href="https://github.com/Dawnilove/Ddium/releases/latest/download/Ddium-Setup.exe"><b>⬇ 설치 파일 바로 받기 (Ddium-Setup.exe)</b></a>
-  &nbsp;·&nbsp;
-  <a href="https://github.com/Dawnilove/Ddium/releases/latest/download/Ddium-portable.exe">설치 없이 쓰는 휴대용</a>
 </p>
 
 > 이 프로젝트는 미쓰비시전기와 관련이 없어요. MELSEC·GX Works2·MELSOFT 는 미쓰비시전기의 상표이며, 호환 형식과 통신 규격을 설명하려고 이름만 써요.
